@@ -3,1334 +3,572 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Registro de Asistencia Escolar</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/inter@5.0.0/index.css">
+<title>Elegancia Eventos — Alquiler de Sillas, Mesas, Manteles y Vajillas</title>
+<meta name="description" content="Alquiler de mobiliario y vajilla para bodas, quinceañeras, bautizos y eventos corporativos. Reservá online.">
 <style>
-  body { font-family: 'Inter', sans-serif; }
-  .view { display: none; }
-  .view.active { display: block; }
-  .nav-item.active { background: linear-gradient(135deg, #4f46e5, #7c3aed); color: white; }
-  .status-btn { transition: all 0.2s; cursor: pointer; }
-  .status-btn.selected { transform: scale(1.05); box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
-  .fade-in { animation: fadeIn 0.3s ease-in; }
-  @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-  .drop-zone { border: 2px dashed #cbd5e1; transition: all 0.2s; }
-  .drop-zone.dragover { border-color: #6366f1; background: #eef2ff; }
-  ::-webkit-scrollbar { width: 8px; }
-  ::-webkit-scrollbar-track { background: #f1f5f9; }
-  ::-webkit-scrollbar-thumb { background: #94a3b8; border-radius: 4px; }
+  :root{
+    --dorado:#c9a24b;
+    --dorado-oscuro:#a8832f;
+    --crema:#faf6ef;
+    --marron:#2b1d12;
+    --marron-claro:#4a3524;
+    --gris:#6b6b6b;
+    --blanco:#ffffff;
+    --sombra:0 10px 30px rgba(43,29,18,.12);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:'Georgia','Times New Roman',serif;
+    color:var(--marron);
+    background:var(--crema);
+    line-height:1.6;
+  }
+  h1,h2,h3{font-family:'Playfair Display','Georgia',serif;font-weight:700;letter-spacing:.5px}
+  a{color:inherit;text-decoration:none}
+  img{max-width:100%;display:block}
+
+  /* NAV */
+  header{
+    position:fixed;top:0;left:0;right:0;z-index:100;
+    background:rgba(250,246,239,.95);
+    backdrop-filter:blur(8px);
+    border-bottom:1px solid rgba(201,162,75,.2);
+    transition:all .3s;
+  }
+  nav{
+    max-width:1200px;margin:auto;padding:1rem 1.5rem;
+    display:flex;align-items:center;justify-content:space-between;
+  }
+  .logo{font-size:1.5rem;color:var(--marron);font-weight:700}
+  .logo span{color:var(--dorado)}
+  .nav-links{display:flex;gap:2rem;list-style:none}
+  .nav-links a{
+    font-size:.95rem;color:var(--marron);
+    transition:color .3s;position:relative;
+  }
+  .nav-links a:hover{color:var(--dorado)}
+  .nav-links a::after{
+    content:'';position:absolute;bottom:-4px;left:0;
+    width:0;height:2px;background:var(--dorado);transition:width .3s;
+  }
+  .nav-links a:hover::after{width:100%}
+  .btn-menu{display:none;background:none;border:none;font-size:1.5rem;color:var(--marron);cursor:pointer}
+
+  /* HERO */
+  .hero{
+    min-height:100vh;
+    background:
+      linear-gradient(rgba(43,29,18,.55),rgba(43,29,18,.55)),
+      url('https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&w=1600&q=80') center/cover;
+    display:flex;align-items:center;justify-content:center;
+    text-align:center;color:var(--blanco);padding:0 1.5rem;
+  }
+  .hero-content{max-width:800px;animation:fadeUp 1s ease}
+  .hero h1{font-size:clamp(2rem,5vw,3.8rem);margin-bottom:1rem;line-height:1.2}
+  .hero h1 span{color:var(--dorado)}
+  .hero p{font-size:1.2rem;margin-bottom:2rem;opacity:.95}
+  .btn{
+    display:inline-block;padding:.9rem 2.2rem;
+    background:var(--dorado);color:var(--blanco);
+    border:none;border-radius:50px;font-size:1rem;
+    cursor:pointer;transition:all .3s;
+    font-family:inherit;letter-spacing:1px;text-transform:uppercase;
+  }
+  .btn:hover{background:var(--dorado-oscuro);transform:translateY(-3px);box-shadow:0 10px 25px rgba(201,162,75,.4)}
+  .btn-outline{background:transparent;border:2px solid var(--blanco);margin-left:1rem}
+  .btn-outline:hover{background:var(--blanco);color:var(--marron)}
+
+  @keyframes fadeUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+
+  /* SECCIONES */
+  section{padding:5rem 1.5rem}
+  .container{max-width:1200px;margin:auto}
+  .section-title{text-align:center;margin-bottom:3rem}
+  .section-title h2{font-size:2.5rem;color:var(--marron);margin-bottom:.5rem}
+  .section-title p{color:var(--gris);font-style:italic}
+  .section-title .line{
+    width:60px;height:3px;background:var(--dorado);
+    margin:1rem auto;
+  }
+
+  /* SERVICIOS */
+  .servicios{background:var(--blanco)}
+  .grid-servicios{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+    gap:2rem;
+  }
+  .card{
+    background:var(--crema);border-radius:12px;overflow:hidden;
+    box-shadow:var(--sombra);transition:transform .4s,box-shadow .4s;
+    text-align:center;
+  }
+  .card:hover{transform:translateY(-10px);box-shadow:0 20px 40px rgba(43,29,18,.18)}
+  .card-img{height:200px;overflow:hidden}
+  .card-img img{width:100%;height:100%;object-fit:cover;transition:transform .5s}
+  .card:hover .card-img img{transform:scale(1.1)}
+  .card-body{padding:1.5rem}
+  .card-body h3{color:var(--marron);margin-bottom:.5rem;font-size:1.3rem}
+  .card-body p{color:var(--gris);font-size:.95rem}
+  .card-icon{
+    width:60px;height:60px;margin:0 auto 1rem;
+    background:var(--dorado);border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    color:var(--blanco);
+  }
+
+  /* POR QUÉ ELEGIRNOS */
+  .porque{background:var(--marron);color:var(--crema)}
+  .porque .section-title h2{color:var(--crema)}
+  .porque .section-title p{color:var(--dorado)}
+  .grid-porque{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:2rem;text-align:center;
+  }
+  .feature{padding:1.5rem}
+  .feature .icon{
+    width:70px;height:70px;margin:0 auto 1rem;
+    border:2px solid var(--dorado);border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    color:var(--dorado);font-size:1.8rem;
+  }
+  .feature h3{color:var(--dorado);margin-bottom:.5rem;font-size:1.2rem}
+  .feature p{font-size:.95rem;opacity:.9}
+
+  /* GALERÍA */
+  .galeria{background:var(--crema)}
+  .grid-galeria{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+    gap:1rem;
+  }
+  .galeria-item{
+    height:250px;border-radius:8px;overflow:hidden;
+    position:relative;cursor:pointer;
+  }
+  .galeria-item img{width:100%;height:100%;object-fit:cover;transition:transform .5s}
+  .galeria-item:hover img{transform:scale(1.1)}
+  .galeria-item::after{
+    content:'';position:absolute;inset:0;
+    background:linear-gradient(transparent 60%,rgba(43,29,18,.7));
+    opacity:0;transition:opacity .3s;
+  }
+  .galeria-item:hover::after{opacity:1}
+  .galeria-item span{
+    position:absolute;bottom:1rem;left:1rem;color:var(--blanco);
+    font-size:1.1rem;font-weight:600;z-index:2;
+    opacity:0;transition:opacity .3s;
+  }
+  .galeria-item:hover span{opacity:1}
+
+  /* RESERVACIÓN */
+  .reservacion{
+    background:
+      linear-gradient(rgba(250,246,239,.92),rgba(250,246,239,.92)),
+      url('https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?auto=format&fit=crop&w=1600&q=80') center/cover fixed;
+  }
+  .form-container{
+    max-width:800px;margin:auto;
+    background:var(--blanco);padding:3rem;border-radius:12px;
+    box-shadow:var(--sombra);
+  }
+  .form-grid{
+    display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;
+  }
+  .form-group{display:flex;flex-direction:column}
+  .form-group.full{grid-column:1/-1}
+  .form-group label{
+    font-size:.9rem;margin-bottom:.4rem;
+    color:var(--marron);font-weight:600;
+  }
+  .form-group input,
+  .form-group select,
+  .form-group textarea{
+    padding:.8rem 1rem;border:1px solid #ddd;border-radius:6px;
+    font-family:inherit;font-size:1rem;background:var(--crema);
+    transition:border-color .3s,box-shadow .3s;
+  }
+  .form-group input:focus,
+  .form-group select:focus,
+  .form-group textarea:focus{
+    outline:none;border-color:var(--dorado);
+    box-shadow:0 0 0 3px rgba(201,162,75,.15);
+  }
+  .form-group textarea{resize:vertical;min-height:100px}
+  .checkbox-group{
+    display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
+    gap:.8rem;margin-top:.5rem;
+  }
+  .checkbox-item{
+    display:flex;align-items:center;gap:.5rem;
+    padding:.7rem;background:var(--crema);border-radius:6px;
+    cursor:pointer;transition:background .3s;
+    font-size:.95rem;
+  }
+  .checkbox-item:hover{background:#f0e8d6}
+  .checkbox-item input{width:auto;margin:0;cursor:pointer}
+  .form-submit{text-align:center;margin-top:2rem}
+  .mensaje-exito{
+    display:none;margin-top:1.5rem;padding:1rem;
+    background:#d4edda;color:#155724;border-radius:6px;
+    text-align:center;border:1px solid #c3e6cb;
+  }
+  .mensaje-exito.show{display:block;animation:fadeUp .5s}
+
+  /* CONTACTO / FOOTER */
+  footer{
+    background:var(--marron);color:var(--crema);
+    padding:3rem 1.5rem 1.5rem;
+  }
+  .footer-grid{
+    max-width:1200px;margin:auto;
+    display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:2rem;margin-bottom:2rem;
+  }
+  .footer-col h4{color:var(--dorado);margin-bottom:1rem;font-size:1.1rem}
+  .footer-col p,.footer-col a{font-size:.95rem;opacity:.9;display:block;margin-bottom:.5rem}
+  .footer-col a:hover{color:var(--dorado)}
+  .social{display:flex;gap:1rem;margin-top:1rem}
+  .social a{
+    width:40px;height:40px;border:1px solid var(--dorado);
+    border-radius:50%;display:flex;align-items:center;justify-content:center;
+    color:var(--dorado);transition:all .3s;
+  }
+  .social a:hover{background:var(--dorado);color:var(--marron)}
+  .copyright{
+    text-align:center;padding-top:1.5rem;
+    border-top:1px solid rgba(201,162,75,.2);
+    font-size:.85rem;opacity:.7;
+  }
+
+  /* RESPONSIVE */
+  @media (max-width:768px){
+    .nav-links{
+      display:none;position:absolute;top:100%;left:0;right:0;
+      background:var(--crema);flex-direction:column;
+      padding:1.5rem;gap:1rem;box-shadow:var(--sombra);
+    }
+    .nav-links.active{display:flex}
+    .btn-menu{display:block}
+    .form-grid{grid-template-columns:1fr}
+    .form-container{padding:1.5rem}
+    .btn-outline{margin-left:0;margin-top:1rem}
+    section{padding:3.5rem 1.5rem}
+    .section-title h2{font-size:2rem}
+  }
 </style>
 </head>
-<body class="bg-slate-50 min-h-screen">
+<body>
 
-<div class="flex min-h-screen">
-  <!-- Sidebar -->
-  <aside class="w-64 bg-white border-r border-slate-200 p-6 hidden md:block">
-    <div class="flex items-center gap-3 mb-10">
-      <div class="w-11 h-11 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl flex items-center justify-center text-2xl">📚</div>
-      <div>
-        <h1 class="font-bold text-slate-800 text-lg">AsistenciaPro</h1>
-        <p class="text-xs text-slate-500">Registro escolar</p>
-      </div>
-    </div>
-    <nav class="space-y-2">
-      <button onclick="showView('dashboard')" data-view="dashboard" class="nav-item active w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-100 transition">
-        <span>📊</span> Panel Principal
-      </button>
-      <button onclick="showView('students')" data-view="students" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-100 transition">
-        <span></span> Estudiantes
-      </button>
-      <button onclick="showView('parallels')" data-view="parallels" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-100 transition">
-        <span>🏫</span> Paralelos
-      </button>
-      <button onclick="showView('attendance')" data-view="attendance" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-100 transition">
-        <span>✅</span> Tomar Asistencia
-      </button>
-      <button onclick="showView('reports')" data-view="reports" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-100 transition">
-        <span></span> Reportes
-      </button>
-    </nav>
-    <div class="mt-10 p-4 bg-gradient-to-br from-indigo-50 to-purple-50 rounded-xl border border-indigo-100">
-      <p class="text-xs text-slate-600 font-medium">💡 Consejo</p>
-      <p class="text-xs text-slate-500 mt-1">Registra primero los paralelos y estudiantes antes de tomar asistencia.</p>
-    </div>
-  </aside>
+<!-- NAV -->
+<header>
+  <nav>
+    <div class="logo">Elegancia<span>Eventos</span></div>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#inicio">Inicio</a></li>
+      <li><a href="#servicios">Servicios</a></li>
+      <li><a href="#porque">Nosotros</a></li>
+      <li><a href="#galeria">Galería</a></li>
+      <li><a href="#reservar">Reservar</a></li>
+      <li><a href="#contacto">Contacto</a></li>
+    </ul>
+    <button class="btn-menu" id="btnMenu">☰</button>
+  </nav>
+</header>
 
-  <!-- Mobile nav -->
-  <div class="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 z-50 flex justify-around py-2">
-    <button onclick="showView('dashboard')" data-view="dashboard" class="nav-item active flex flex-col items-center p-2 text-xs text-slate-600">
-      <span class="text-xl">📊</span>Panel
-    </button>
-    <button onclick="showView('students')" data-view="students" class="nav-item flex flex-col items-center p-2 text-xs text-slate-600">
-      <span class="text-xl">👥</span>Estudiantes
-    </button>
-    <button onclick="showView('parallels')" data-view="parallels" class="nav-item flex flex-col items-center p-2 text-xs text-slate-600">
-      <span class="text-xl">🏫</span>Paralelos
-    </button>
-    <button onclick="showView('attendance')" data-view="attendance" class="nav-item flex flex-col items-center p-2 text-xs text-slate-600">
-      <span class="text-xl">✅</span>Asistencia
-    </button>
-    <button onclick="showView('reports')" data-view="reports" class="nav-item flex flex-col items-center p-2 text-xs text-slate-600">
-      <span class="text-xl">📈</span>Reportes
-    </button>
+<!-- HERO -->
+<section class="hero" id="inicio">
+  <div class="hero-content">
+    <h1>Hacé de tu evento un momento <span>inolvidable</span></h1>
+    <p>Alquiler de sillas, mesas, manteles y vajillas para bodas, quinceañeras, bautizos y eventos corporativos.</p>
+    <a href="#reservar" class="btn">Reservar ahora</a>
+    <a href="#servicios" class="btn btn-outline">Ver servicios</a>
   </div>
+</section>
 
-  <!-- Main content -->
-  <main class="flex-1 p-4 md:p-8 pb-24 md:pb-8 overflow-x-hidden">
-    
-    <!-- DASHBOARD -->
-    <div id="dashboard" class="view active fade-in">
-      <div class="mb-8">
-        <h2 class="text-3xl font-bold text-slate-800">Panel Principal</h2>
-        <p class="text-slate-500 mt-1">Resumen general del registro de asistencia</p>
-      </div>
-      <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
-          <div class="flex items-center justify-between mb-3">
-            <div class="w-10 h-10 bg-indigo-100 rounded-lg flex items-center justify-center text-xl">👥</div>
-            <span class="text-xs font-medium text-indigo-600 bg-indigo-50 px-2 py-1 rounded-full">Total</span>
-          </div>
-          <p id="stat-students" class="text-3xl font-bold text-slate-800">0</p>
-          <p class="text-sm text-slate-500 mt-1">Estudiantes</p>
+<!-- SERVICIOS -->
+<section class="servicios" id="servicios">
+  <div class="container">
+    <div class="section-title">
+      <h2>Nuestros Servicios</h2>
+      <div class="line"></div>
+      <p>Todo lo que necesitás para una celebración perfecta</p>
+    </div>
+    <div class="grid-servicios">
+      <div class="card">
+        <div class="card-img">
+          <img src="https://images.unsplash.com/photo-1519167758481-83f550bb49b3?auto=format&fit=crop&w=600&q=80" alt="Sillas">
         </div>
-        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
-          <div class="flex items-center justify-between mb-3">
-            <div class="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center text-xl">🏫</div>
-            <span class="text-xs font-medium text-purple-600 bg-purple-50 px-2 py-1 rounded-full">Total</span>
-          </div>
-          <p id="stat-parallels" class="text-3xl font-bold text-slate-800">0</p>
-          <p class="text-sm text-slate-500 mt-1">Paralelos</p>
-        </div>
-        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
-          <div class="flex items-center justify-between mb-3">
-            <div class="w-10 h-10 bg-emerald-100 rounded-lg flex items-center justify-center text-xl">✅</div>
-            <span class="text-xs font-medium text-emerald-600 bg-emerald-50 px-2 py-1 rounded-full">Hoy</span>
-          </div>
-          <p id="stat-present" class="text-3xl font-bold text-slate-800">0</p>
-          <p class="text-sm text-slate-500 mt-1">Presentes hoy</p>
-        </div>
-        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
-          <div class="flex items-center justify-between mb-3">
-            <div class="w-10 h-10 bg-rose-100 rounded-lg flex items-center justify-center text-xl">❌</div>
-            <span class="text-xs font-medium text-rose-600 bg-rose-50 px-2 py-1 rounded-full">Hoy</span>
-          </div>
-          <p id="stat-absent" class="text-3xl font-bold text-slate-800">0</p>
-          <p class="text-sm text-slate-500 mt-1">Faltas hoy</p>
+        <div class="card-body">
+          <div class="card-icon">🪑</div>
+          <h3>Sillas</h3>
+          <p>Sillas Tiffany, cruzadas, Napoleón y más. Variedad de colores para cada estilo de evento.</p>
         </div>
       </div>
-
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
-          <h3 class="font-bold text-slate-800 mb-4">Asistencia de hoy</h3>
-          <canvas id="todayChart" height="200"></canvas>
+      <div class="card">
+        <div class="card-img">
+          <img src="https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?auto=format&fit=crop&w=600&q=80" alt="Mesas">
         </div>
-        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
-          <h3 class="font-bold text-slate-800 mb-4">Últimos registros</h3>
-          <div id="recentRecords" class="space-y-3 max-h-64 overflow-y-auto">
-            <p class="text-sm text-slate-400 text-center py-8">No hay registros aún</p>
-          </div>
+        <div class="card-body">
+          <div class="card-icon">🍽️</div>
+          <h3>Mesas</h3>
+          <p>Mesas redondas, rectangulares y tipo cocktail. Ideales para banquetes y recepciones.</p>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-img">
+          <img src="https://images.unsplash.com/photo-1530023367847-a683933f4172?auto=format&fit=crop&w=600&q=80" alt="Manteles">
+        </div>
+        <div class="card-body">
+          <div class="card-icon">🧵</div>
+          <h3>Manteles</h3>
+          <p>Manteles de alta calidad en múltiples colores y texturas. Combiná con tu paleta de colores.</p>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-img">
+          <img src="https://images.unsplash.com/photo-1577140917170-285929fb55b7?auto=format&fit=crop&w=600&q=80" alt="Vajillas">
+        </div>
+        <div class="card-body">
+          <div class="card-icon">🍷</div>
+          <h3>Vajillas</h3>
+          <p>Platos, copas, cubiertos y cristalería elegante. Sets completos para todo tipo de menú.</p>
         </div>
       </div>
     </div>
+  </div>
+</section>
 
-    <!-- STUDENTS -->
-    <div id="students" class="view fade-in">
-      <div class="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
-        <div>
-          <h2 class="text-3xl font-bold text-slate-800">Estudiantes</h2>
-          <p class="text-slate-500 mt-1">Gestiona el listado de estudiantes</p>
-        </div>
-        <div class="flex gap-2 flex-wrap">
-          <button onclick="openImportModal()" class="bg-gradient-to-r from-emerald-500 to-teal-600 text-white px-5 py-3 rounded-xl font-medium shadow-md hover:shadow-lg transition flex items-center gap-2">
-            <span>📥</span> Importar desde Excel
-          </button>
-          <button onclick="openStudentModal()" class="bg-gradient-to-r from-indigo-500 to-purple-600 text-white px-5 py-3 rounded-xl font-medium shadow-md hover:shadow-lg transition flex items-center gap-2">
-            <span>➕</span> Nuevo Estudiante
-          </button>
-        </div>
+<!-- POR QUÉ ELEGIRNOS -->
+<section class="porque" id="porque">
+  <div class="container">
+    <div class="section-title">
+      <h2>¿Por qué elegirnos?</h2>
+      <div class="line"></div>
+      <p>Más de 15 años haciendo realidad eventos soñados</p>
+    </div>
+    <div class="grid-porque">
+      <div class="feature">
+        <div class="icon">✓</div>
+        <h3>Calidad Premium</h3>
+        <p>Mobiliario y vajilla en excelente estado, renovados constantemente.</p>
       </div>
-
-      <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 mb-6">
-        <div class="flex flex-col md:flex-row gap-3">
-          <input type="text" id="searchStudent" placeholder="🔍 Buscar estudiante..." oninput="renderStudents()" class="flex-1 px-4 py-2.5 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500">
-          <select id="filterParallel" onchange="renderStudents()" class="px-4 py-2.5 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500">
-            <option value="">Todos los paralelos</option>
-          </select>
-        </div>
+      <div class="feature">
+        <div class="icon">🚚</div>
+        <h3>Entrega Puntual</h3>
+        <p>Llegamos a tiempo a tu evento, con montaje incluido si lo necesitás.</p>
       </div>
-
-      <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-        <div class="overflow-x-auto">
-          <table class="w-full">
-            <thead class="bg-slate-50 border-b border-slate-200">
-              <tr>
-                <th class="text-left px-6 py-4 text-xs font-semibold text-slate-500 uppercase">Nombre</th>
-                <th class="text-left px-6 py-4 text-xs font-semibold text-slate-500 uppercase">Paralelo</th>
-                <th class="text-left px-6 py-4 text-xs font-semibold text-slate-500 uppercase">ID / Cédula</th>
-                <th class="text-center px-6 py-4 text-xs font-semibold text-slate-500 uppercase">Acciones</th>
-              </tr>
-            </thead>
-            <tbody id="studentsTable" class="divide-y divide-slate-100">
-            </tbody>
-          </table>
-        </div>
-        <div id="studentsEmpty" class="hidden p-12 text-center">
-          <p class="text-5xl mb-3">📋</p>
-          <p class="text-slate-500">No hay estudiantes registrados</p>
-          <div class="flex gap-3 justify-center mt-4">
-            <button onclick="openImportModal()" class="text-emerald-600 font-medium hover:underline">📥 Importar desde Excel</button>
-            <span class="text-slate-300">|</span>
-            <button onclick="openStudentModal()" class="text-indigo-600 font-medium hover:underline">➕ Agregar el primero</button>
-          </div>
-        </div>
+      <div class="feature">
+        <div class="icon">💰</div>
+        <h3>Precios Justos</h3>
+        <p>Paquetes adaptados a todo tipo de presupuesto y cantidad de invitados.</p>
+      </div>
+      <div class="feature">
+        <div class="icon">❤️</div>
+        <h3>Atención Personalizada</h3>
+        <p>Te asesoramos para que cada detalle sea perfecto en tu día especial.</p>
       </div>
     </div>
+  </div>
+</section>
 
-    <!-- PARALLELS -->
-    <div id="parallels" class="view fade-in">
-      <div class="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
-        <div>
-          <h2 class="text-3xl font-bold text-slate-800">Paralelos</h2>
-          <p class="text-slate-500 mt-1">Administra los grupos o secciones</p>
-        </div>
-        <button onclick="openParallelModal()" class="bg-gradient-to-r from-indigo-500 to-purple-600 text-white px-5 py-3 rounded-xl font-medium shadow-md hover:shadow-lg transition flex items-center gap-2">
-          <span>➕</span> Nuevo Paralelo
-        </button>
+<!-- GALERÍA -->
+<section class="galeria" id="galeria">
+  <div class="container">
+    <div class="section-title">
+      <h2>Eventos Realizados</h2>
+      <div class="line"></div>
+      <p>Algunos de los momentos que hemos ayudado a crear</p>
+    </div>
+    <div class="grid-galeria">
+      <div class="galeria-item">
+        <img src="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=600&q=80" alt="Boda">
+        <span>Boda Clásica</span>
       </div>
-
-      <div id="parallelsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
-      <div id="parallelsEmpty" class="hidden bg-white rounded-2xl border border-slate-200 p-12 text-center">
-        <p class="text-5xl mb-3">🏫</p>
-        <p class="text-slate-500">No hay paralelos registrados</p>
-        <button onclick="openParallelModal()" class="mt-4 text-indigo-600 font-medium hover:underline">Crear el primero</button>
+      <div class="galeria-item">
+        <img src="https://images.unsplash.com/photo-1530103862676-de8c9debad1d?auto=format&fit=crop&w=600&q=80" alt="Quinceañera">
+        <span>Quinceañera</span>
+      </div>
+      <div class="galeria-item">
+        <img src="https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&w=600&q=80" alt="Corporativo">
+        <span>Evento Corporativo</span>
+      </div>
+      <div class="galeria-item">
+        <img src="https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?auto=format&fit=crop&w=600&q=80" alt="Banquete">
+        <span>Banquete Elegante</span>
       </div>
     </div>
+  </div>
+</section>
 
-    <!-- ATTENDANCE -->
-    <div id="attendance" class="view fade-in">
-      <div class="mb-8">
-        <h2 class="text-3xl font-bold text-slate-800">Tomar Asistencia</h2>
-        <p class="text-slate-500 mt-1">Registra la asistencia diaria de los estudiantes</p>
-      </div>
-
-      <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 mb-6">
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div>
-            <label class="block text-sm font-medium text-slate-700 mb-2">Fecha</label>
-            <input type="date" id="attendanceDate" class="w-full px-4 py-2.5 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500">
+<!-- RESERVACIÓN -->
+<section class="reservacion" id="reservar">
+  <div class="container">
+    <div class="section-title">
+      <h2>Hacé tu Reservación</h2>
+      <div class="line"></div>
+      <p>Completá el formulario y nos pondremos en contacto a la brevedad</p>
+    </div>
+    <div class="form-container">
+      <form id="formReserva" novalidate>
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="nombre">Nombre completo *</label>
+            <input type="text" id="nombre" name="nombre" required>
           </div>
-          <div>
-            <label class="block text-sm font-medium text-slate-700 mb-2">Paralelo</label>
-            <select id="attendanceParallel" onchange="loadAttendanceList()" class="w-full px-4 py-2.5 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500">
-              <option value="">Seleccionar paralelo</option>
+          <div class="form-group">
+            <label for="email">Correo electrónico *</label>
+            <input type="email" id="email" name="email" required>
+          </div>
+          <div class="form-group">
+            <label for="telefono">Teléfono *</label>
+            <input type="tel" id="telefono" name="telefono" required>
+          </div>
+          <div class="form-group">
+            <label for="evento">Tipo de evento *</label>
+            <select id="evento" name="evento" required>
+              <option value="">Seleccioná una opción</option>
+              <option>Boda</option>
+              <option>Quinceañera</option>
+              <option>Bautismo</option>
+              <option>Cumpleaños</option>
+              <option>Evento corporativo</option>
+              <option>Graduación</option>
+              <option>Otro</option>
             </select>
           </div>
-          <div class="flex items-end gap-2">
-            <button onclick="markAllPresent()" class="flex-1 bg-emerald-50 text-emerald-700 px-4 py-2.5 rounded-xl font-medium hover:bg-emerald-100 transition">
-              ✓ Todos presentes
-            </button>
-            <button onclick="clearAttendance()" class="flex-1 bg-slate-100 text-slate-700 px-4 py-2.5 rounded-xl font-medium hover:bg-slate-200 transition">
-              Limpiar
-            </button>
+          <div class="form-group">
+            <label for="fecha">Fecha del evento *</label>
+            <input type="date" id="fecha" name="fecha" required>
           </div>
-        </div>
-      </div>
-
-      <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-        <div class="p-6 border-b border-slate-200 flex flex-wrap gap-4 items-center justify-between">
-          <h3 class="font-bold text-slate-800">Lista de estudiantes</h3>
-          <div class="flex gap-2 text-xs">
-            <span class="px-3 py-1 bg-emerald-100 text-emerald-700 rounded-full font-medium">P: Presente</span>
-            <span class="px-3 py-1 bg-amber-100 text-amber-700 rounded-full font-medium">A: Atraso</span>
-            <span class="px-3 py-1 bg-rose-100 text-rose-700 rounded-full font-medium">FI: Falta Injustificada</span>
-            <span class="px-3 py-1 bg-blue-100 text-blue-700 rounded-full font-medium">FJ: Falta Justificada</span>
+          <div class="form-group">
+            <label for="invitados">Cantidad de invitados</label>
+            <input type="number" id="invitados" name="invitados" min="1" placeholder="Ej: 100">
           </div>
-        </div>
-        <div id="attendanceList" class="divide-y divide-slate-100">
-          <p class="p-8 text-center text-slate-400">Selecciona un paralelo para ver los estudiantes</p>
-        </div>
-        <div class="p-6 border-t border-slate-200 bg-slate-50 flex flex-wrap gap-3 justify-between items-center">
-          <div id="attendanceSummary" class="text-sm text-slate-600"></div>
-          <button onclick="saveAttendance()" class="bg-gradient-to-r from-indigo-500 to-purple-600 text-white px-6 py-2.5 rounded-xl font-medium shadow-md hover:shadow-lg transition">
-            💾 Guardar Asistencia
-          </button>
-        </div>
-      </div>
-    </div>
-
-    <!-- REPORTS -->
-    <div id="reports" class="view fade-in">
-      <div class="mb-8">
-        <h2 class="text-3xl font-bold text-slate-800">Reportes</h2>
-        <p class="text-slate-500 mt-1">Estadísticas detalladas por estudiante</p>
-      </div>
-
-      <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 mb-6">
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div>
-            <label class="block text-sm font-medium text-slate-700 mb-2">Desde</label>
-            <input type="date" id="reportFrom" class="w-full px-4 py-2.5 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500">
-          </div>
-          <div>
-            <label class="block text-sm font-medium text-slate-700 mb-2">Hasta</label>
-            <input type="date" id="reportTo" class="w-full px-4 py-2.5 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500">
-          </div>
-          <div>
-            <label class="block text-sm font-medium text-slate-700 mb-2">Paralelo</label>
-            <select id="reportParallel" class="w-full px-4 py-2.5 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500">
-              <option value="">Todos los paralelos</option>
-            </select>
-          </div>
-        </div>
-        <div class="flex gap-3 mt-4">
-          <button onclick="generateReport()" class="bg-gradient-to-r from-indigo-500 to-purple-600 text-white px-5 py-2.5 rounded-xl font-medium shadow-md hover:shadow-lg transition">
-            📊 Generar Reporte
-          </button>
-          <button onclick="exportCSV()" class="bg-slate-100 text-slate-700 px-5 py-2.5 rounded-xl font-medium hover:bg-slate-200 transition">
-             Exportar CSV
-          </button>
-        </div>
-      </div>
-
-      <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-        <div class="overflow-x-auto">
-          <table class="w-full">
-            <thead class="bg-slate-50 border-b border-slate-200">
-              <tr>
-                <th class="text-left px-6 py-4 text-xs font-semibold text-slate-500 uppercase">Estudiante</th>
-                <th class="text-left px-6 py-4 text-xs font-semibold text-slate-500 uppercase">Paralelo</th>
-                <th class="text-center px-4 py-4 text-xs font-semibold text-emerald-600 uppercase">Presentes</th>
-                <th class="text-center px-4 py-4 text-xs font-semibold text-amber-600 uppercase">Atrasos</th>
-                <th class="text-center px-4 py-4 text-xs font-semibold text-rose-600 uppercase">F. Injust.</th>
-                <th class="text-center px-4 py-4 text-xs font-semibold text-blue-600 uppercase">F. Just.</th>
-                <th class="text-center px-4 py-4 text-xs font-semibold text-slate-500 uppercase">% Asist.</th>
-              </tr>
-            </thead>
-            <tbody id="reportTable" class="divide-y divide-slate-100">
-              <tr><td colspan="7" class="p-8 text-center text-slate-400">Genera un reporte para ver los resultados</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-
-  </main>
-</div>
-
-<!-- MODAL ESTUDIANTE -->
-<div id="studentModal" class="fixed inset-0 bg-black/50 z-50 hidden items-center justify-center p-4">
-  <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md fade-in">
-    <div class="p-6 border-b border-slate-200 flex items-center justify-between">
-      <h3 id="studentModalTitle" class="font-bold text-lg text-slate-800">Nuevo Estudiante</h3>
-      <button onclick="closeStudentModal()" class="text-slate-400 hover:text-slate-600 text-2xl">×</button>
-    </div>
-    <div class="p-6 space-y-4">
-      <div>
-        <label class="block text-sm font-medium text-slate-700 mb-1">Nombre completo *</label>
-        <input type="text" id="studentName" class="w-full px-4 py-2.5 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Ej: María López">
-      </div>
-      <div>
-        <label class="block text-sm font-medium text-slate-700 mb-1">ID / Cédula</label>
-        <input type="text" id="studentId" class="w-full px-4 py-2.5 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Ej: 1234567890">
-      </div>
-      <div>
-        <label class="block text-sm font-medium text-slate-700 mb-1">Paralelo *</label>
-        <select id="studentParallel" class="w-full px-4 py-2.5 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500">
-          <option value="">Seleccionar paralelo</option>
-        </select>
-      </div>
-    </div>
-    <div class="p-6 border-t border-slate-200 flex gap-3 justify-end">
-      <button onclick="closeStudentModal()" class="px-5 py-2.5 text-slate-600 font-medium hover:bg-slate-100 rounded-xl transition">Cancelar</button>
-      <button onclick="saveStudent()" class="bg-gradient-to-r from-indigo-500 to-purple-600 text-white px-5 py-2.5 rounded-xl font-medium shadow-md hover:shadow-lg transition">Guardar</button>
-    </div>
-  </div>
-</div>
-
-<!-- MODAL PARALELO -->
-<div id="parallelModal" class="fixed inset-0 bg-black/50 z-50 hidden items-center justify-center p-4">
-  <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md fade-in">
-    <div class="p-6 border-b border-slate-200 flex items-center justify-between">
-      <h3 id="parallelModalTitle" class="font-bold text-lg text-slate-800">Nuevo Paralelo</h3>
-      <button onclick="closeParallelModal()" class="text-slate-400 hover:text-slate-600 text-2xl">×</button>
-    </div>
-    <div class="p-6 space-y-4">
-      <div>
-        <label class="block text-sm font-medium text-slate-700 mb-1">Nombre del paralelo *</label>
-        <input type="text" id="parallelName" class="w-full px-4 py-2.5 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Ej: 5to A, 10mo B">
-      </div>
-      <div>
-        <label class="block text-sm font-medium text-slate-700 mb-1">Descripción</label>
-        <input type="text" id="parallelDesc" class="w-full px-4 py-2.5 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Ej: Primaria - Mañana">
-      </div>
-    </div>
-    <div class="p-6 border-t border-slate-200 flex gap-3 justify-end">
-      <button onclick="closeParallelModal()" class="px-5 py-2.5 text-slate-600 font-medium hover:bg-slate-100 rounded-xl transition">Cancelar</button>
-      <button onclick="saveParallel()" class="bg-gradient-to-r from-indigo-500 to-purple-600 text-white px-5 py-2.5 rounded-xl font-medium shadow-md hover:shadow-lg transition">Guardar</button>
-    </div>
-  </div>
-</div>
-
-<!-- MODAL IMPORTAR ESTUDIANTES -->
-<div id="importModal" class="fixed inset-0 bg-black/50 z-50 hidden items-center justify-center p-4 overflow-y-auto">
-  <div class="bg-white rounded-2xl shadow-2xl w-full max-w-4xl fade-in my-8">
-    <div class="p-6 border-b border-slate-200 flex items-center justify-between">
-      <div>
-        <h3 class="font-bold text-lg text-slate-800">📥 Importar Estudiantes desde Excel</h3>
-        <p class="text-xs text-slate-500 mt-1">Pega tu lista o sube un archivo CSV</p>
-      </div>
-      <button onclick="closeImportModal()" class="text-slate-400 hover:text-slate-600 text-2xl">×</button>
-    </div>
-    <div class="p-6 space-y-6">
-      
-      <div class="bg-blue-50 border border-blue-200 rounded-xl p-4">
-        <p class="text-sm font-semibold text-blue-800 mb-2">📋 Formatos aceptados:</p>
-        <ul class="text-xs text-blue-700 space-y-1 ml-4 list-disc">
-          <li><strong>Opción A:</strong> Copia las celdas desde Excel y pégalas aquí (separadas por tabulación)</li>
-          <li><strong>Opción B:</strong> Sube un archivo CSV separado por comas o punto y coma</li>
-          <li>Columnas esperadas: <strong>Nombre</strong>, <strong>ID/Cédula</strong> (opcional), <strong>Paralelo</strong> (opcional)</li>
-          <li>Si no incluyes paralelo, se asignará el que elijas abajo</li>
-        </ul>
-      </div>
-
-      <div class="flex gap-2 border-b border-slate-200">
-        <button onclick="switchImportTab('paste')" id="tabPaste" class="px-4 py-2 text-sm font-medium border-b-2 border-indigo-500 text-indigo-600">📋 Pegar desde Excel</button>
-        <button onclick="switchImportTab('file')" id="tabFile" class="px-4 py-2 text-sm font-medium border-b-2 border-transparent text-slate-500 hover:text-slate-700"> Subir archivo CSV</button>
-      </div>
-
-      <div id="pasteTab" class="space-y-4">
-        <div>
-          <label class="block text-sm font-medium text-slate-700 mb-2">Pega aquí tu lista (copiada desde Excel):</label>
-          <textarea id="pasteArea" rows="10" class="w-full px-4 py-3 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 font-mono text-sm" placeholder="Ejemplo:
-Juan Pérez	1234567890	5to A
-María López	0987654321	5to A
-Carlos Gómez		5to B"></textarea>
-        </div>
-      </div>
-
-      <div id="fileTab" class="hidden space-y-4">
-        <div id="dropZone" class="drop-zone rounded-xl p-8 text-center cursor-pointer" onclick="document.getElementById('fileInput').click()">
-          <p class="text-4xl mb-2">📄</p>
-          <p class="font-medium text-slate-700">Haz clic o arrastra tu archivo CSV aquí</p>
-          <p class="text-xs text-slate-500 mt-1">Formatos: .csv, .txt</p>
-          <input type="file" id="fileInput" accept=".csv,.txt" class="hidden" onchange="handleFileSelect(event)">
-        </div>
-        <div id="fileInfo" class="hidden bg-slate-50 rounded-xl p-4 flex items-center justify-between">
-          <div class="flex items-center gap-3">
-            <span class="text-2xl">📄</span>
-            <div>
-              <p id="fileName" class="text-sm font-medium text-slate-800"></p>
-              <p id="fileSize" class="text-xs text-slate-500"></p>
+          <div class="form-group full">
+            <label>Productos que deseás alquilar *</label>
+            <div class="checkbox-group">
+              <label class="checkbox-item"><input type="checkbox" name="productos" value="Sillas"> Sillas</label>
+              <label class="checkbox-item"><input type="checkbox" name="productos" value="Mesas"> Mesas</label>
+              <label class="checkbox-item"><input type="checkbox" name="productos" value="Manteles"> Manteles</label>
+              <label class="checkbox-item"><input type="checkbox" name="productos" value="Vajillas"> Vajillas</label>
+              <label class="checkbox-item"><input type="checkbox" name="productos" value="Copas"> Copas</label>
+              <label class="checkbox-item"><input type="checkbox" name="productos" value="Cubiertos"> Cubiertos</label>
             </div>
           </div>
-          <button onclick="clearFile()" class="text-rose-500 hover:text-rose-700 text-sm">Quitar</button>
-        </div>
-      </div>
-
-      <div class="bg-slate-50 rounded-xl p-4 space-y-4">
-        <h4 class="font-semibold text-slate-800 text-sm">⚙️ Configuración de importación</h4>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <label class="block text-xs font-medium text-slate-700 mb-1">Paralelo por defecto (si no se especifica)</label>
-            <select id="importDefaultParallel" class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
-              <option value="">-- Sin asignar --</option>
-            </select>
-          </div>
-          <div>
-            <label class="block text-xs font-medium text-slate-700 mb-1">Separador (solo para CSV)</label>
-            <select id="importSeparator" class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
-              <option value="auto">Automático</option>
-              <option value=",">Coma (,)</option>
-              <option value=";">Punto y coma (;)</option>
-              <option value="tab">Tabulación</option>
-            </select>
+          <div class="form-group full">
+            <label for="mensaje">Mensaje o detalles adicionales</label>
+            <textarea id="mensaje" name="mensaje" placeholder="Contanos más sobre tu evento, colores preferidos, cantidades específicas..."></textarea>
           </div>
         </div>
-        <div class="flex items-center gap-2">
-          <input type="checkbox" id="skipHeader" checked class="rounded text-indigo-600">
-          <label for="skipHeader" class="text-sm text-slate-700">Omitir primera fila (encabezados)</label>
+        <div class="form-submit">
+          <button type="submit" class="btn">Enviar Reservación</button>
         </div>
-        <div class="flex items-center gap-2">
-          <input type="checkbox" id="createMissingParallels" checked class="rounded text-indigo-600">
-          <label for="createMissingParallels" class="text-sm text-slate-700">Crear paralelos automáticamente si no existen</label>
+        <div class="mensaje-exito" id="mensajeExito">
+          ✓ ¡Gracias! Tu reservación fue enviada. Te contactaremos en menos de 24 horas.
         </div>
-      </div>
-
-      <button onclick="analyzeImport()" class="w-full bg-gradient-to-r from-emerald-500 to-teal-600 text-white px-5 py-3 rounded-xl font-medium shadow-md hover:shadow-lg transition flex items-center justify-center gap-2">
-        <span>🔍</span> Analizar y Vista Previa
-      </button>
-
-      <div id="previewSection" class="hidden space-y-4">
-        <div class="flex items-center justify-between">
-          <h4 class="font-semibold text-slate-800">👀 Vista previa</h4>
-          <div class="flex gap-2 text-xs">
-            <span id="previewValid" class="px-3 py-1 bg-emerald-100 text-emerald-700 rounded-full font-medium">✓ 0 válidos</span>
-            <span id="previewInvalid" class="px-3 py-1 bg-rose-100 text-rose-700 rounded-full font-medium">✗ 0 inválidos</span>
-          </div>
-        </div>
-        <div class="max-h-64 overflow-y-auto border border-slate-200 rounded-xl">
-          <table class="w-full text-sm">
-            <thead class="bg-slate-50 sticky top-0">
-              <tr>
-                <th class="text-left px-4 py-2 text-xs font-semibold text-slate-500">#</th>
-                <th class="text-left px-4 py-2 text-xs font-semibold text-slate-500">Nombre</th>
-                <th class="text-left px-4 py-2 text-xs font-semibold text-slate-500">ID</th>
-                <th class="text-left px-4 py-2 text-xs font-semibold text-slate-500">Paralelo</th>
-                <th class="text-center px-4 py-2 text-xs font-semibold text-slate-500">Estado</th>
-              </tr>
-            </thead>
-            <tbody id="previewTable" class="divide-y divide-slate-100"></tbody>
-          </table>
-        </div>
-        <div class="bg-amber-50 border border-amber-200 rounded-xl p-3 text-xs text-amber-800">
-          <strong>️ Atención:</strong> Se importarán <span id="previewCount" class="font-bold">0</span> estudiantes válidos. Los registros inválidos (sin nombre) serán omitidos.
-        </div>
-      </div>
-
-    </div>
-    <div class="p-6 border-t border-slate-200 flex gap-3 justify-end">
-      <button onclick="closeImportModal()" class="px-5 py-2.5 text-slate-600 font-medium hover:bg-slate-100 rounded-xl transition">Cancelar</button>
-      <button id="confirmImportBtn" onclick="confirmImport()" disabled class="bg-gradient-to-r from-indigo-500 to-purple-600 text-white px-5 py-2.5 rounded-xl font-medium shadow-md hover:shadow-lg transition disabled:opacity-50 disabled:cursor-not-allowed">
-        ✅ Confirmar Importación
-      </button>
+      </form>
     </div>
   </div>
-</div>
+</section>
 
-<!-- TOAST -->
-<div id="toast" class="fixed top-6 right-6 z-50 hidden bg-white border border-slate-200 shadow-lg rounded-xl px-5 py-3 flex items-center gap-3 fade-in">
-  <span id="toastIcon" class="text-xl">✅</span>
-  <span id="toastMsg" class="text-sm font-medium text-slate-700"></span>
-</div>
+<!-- FOOTER -->
+<footer id="contacto">
+  <div class="footer-grid">
+    <div class="footer-col">
+      <h4>Elegancia Eventos</h4>
+      <p>Hacemos que cada celebración sea única e inolvidable con el mejor mobiliario y vajilla.</p>
+      <div class="social">
+        <a href="#" aria-label="Facebook">f</a>
+        <a href="#" aria-label="Instagram">📷</a>
+        <a href="#" aria-label="WhatsApp">💬</a>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h4>Contacto</h4>
+      <p>📍 Av. Principal 1234, Ciudad</p>
+      <p>📞 +00 1234 5678</p>
+      <p>✉️ info@eleganciaeventos.com</p>
+    </div>
+    <div class="footer-col">
+      <h4>Horarios</h4>
+      <p>Lunes a Viernes: 9:00 - 19:00</p>
+      <p>Sábados: 9:00 - 14:00</p>
+      <p>Domingos: con cita previa</p>
+    </div>
+    <div class="footer-col">
+      <h4>Enlaces</h4>
+      <a href="#servicios">Servicios</a>
+      <a href="#galeria">Galería</a>
+      <a href="#reservar">Reservar</a>
+      <a href="#">Términos y condiciones</a>
+    </div>
+  </div>
+  <div class="copyright">
+    © 2026 Elegancia Eventos. Todos los derechos reservados.
+  </div>
+</footer>
 
 <script>
-// ===== ESTADO =====
-let state = {
-  parallels: JSON.parse(localStorage.getItem('parallels') || '[]'),
-  students: JSON.parse(localStorage.getItem('students') || '[]'),
-  attendance: JSON.parse(localStorage.getItem('attendance') || '[]'),
-  editingStudentId: null,
-  editingParallelId: null,
-  currentAttendance: {},
-  importPreview: []
-};
+  // Menú móvil
+  const btnMenu = document.getElementById('btnMenu');
+  const navLinks = document.getElementById('navLinks');
+  btnMenu.addEventListener('click', () => navLinks.classList.toggle('active'));
+  document.querySelectorAll('.nav-links a').forEach(a =>
+    a.addEventListener('click', () => navLinks.classList.remove('active'))
+  );
 
-let todayChart = null;
-let importedFileContent = null;
+  // Fecha mínima = hoy
+  const fechaInput = document.getElementById('fecha');
+  fechaInput.min = new Date().toISOString().split('T')[0];
 
-// ===== UTILIDADES =====
-function save() {
-  localStorage.setItem('parallels', JSON.stringify(state.parallels));
-  localStorage.setItem('students', JSON.stringify(state.students));
-  localStorage.setItem('attendance', JSON.stringify(state.attendance));
-}
-
-function toast(msg, icon) {
-  icon = icon || 'OK';
-  var t = document.getElementById('toast');
-  document.getElementById('toastMsg').textContent = msg;
-  document.getElementById('toastIcon').textContent = icon;
-  t.classList.remove('hidden');
-  setTimeout(function() { t.classList.add('hidden'); }, 3000);
-}
-
-function showView(name) {
-  var views = document.querySelectorAll('.view');
-  for (var i = 0; i < views.length; i++) views[i].classList.remove('active');
-  document.getElementById(name).classList.add('active');
-  var navs = document.querySelectorAll('.nav-item');
-  for (var i = 0; i < navs.length; i++) navs[i].classList.remove('active');
-  var targets = document.querySelectorAll('[data-view="' + name + '"]');
-  for (var i = 0; i < targets.length; i++) targets[i].classList.add('active');
-  if (name === 'dashboard') updateDashboard();
-  if (name === 'students') renderStudents();
-  if (name === 'parallels') renderParallels();
-  if (name === 'attendance') initAttendance();
-  if (name === 'reports') initReports();
-}
-
-function formatDate(d) {
-  var date = new Date(d + 'T00:00:00');
-  return date.toLocaleDateString('es-ES', { day: '2-digit', month: 'short', year: 'numeric' });
-}
-
-function todayStr() {
-  var d = new Date();
-  return d.toISOString().split('T')[0];
-}
-
-function normalizeText(t) {
-  return (t || '').toString().trim().replace(/\s+/g, ' ');
-}
-
-function findParallelByName(name) {
-  var normalized = name.toLowerCase().trim();
-  for (var i = 0; i < state.parallels.length; i++) {
-    if (state.parallels[i].name.toLowerCase().trim() === normalized) return state.parallels[i];
-  }
-  return null;
-}
-
-// ===== PARALELOS =====
-function openParallelModal(id) {
-  state.editingParallelId = id || null;
-  document.getElementById('parallelModalTitle').textContent = id ? 'Editar Paralelo' : 'Nuevo Paralelo';
-  if (id) {
-    var p = state.parallels.find(function(x) { return x.id === id; });
-    document.getElementById('parallelName').value = p.name;
-    document.getElementById('parallelDesc').value = p.desc || '';
-  } else {
-    document.getElementById('parallelName').value = '';
-    document.getElementById('parallelDesc').value = '';
-  }
-  document.getElementById('parallelModal').classList.remove('hidden');
-  document.getElementById('parallelModal').classList.add('flex');
-}
-
-function closeParallelModal() {
-  document.getElementById('parallelModal').classList.add('hidden');
-  document.getElementById('parallelModal').classList.remove('flex');
-}
-
-function saveParallel() {
-  var name = document.getElementById('parallelName').value.trim();
-  var desc = document.getElementById('parallelDesc').value.trim();
-  if (!name) return toast('El nombre es obligatorio', '!');
-  if (state.editingParallelId) {
-    var p = state.parallels.find(function(x) { return x.id === state.editingParallelId; });
-    p.name = name; p.desc = desc;
-    toast('Paralelo actualizado', 'OK');
-  } else {
-    state.parallels.push({ id: Date.now().toString(), name: name, desc: desc });
-    toast('Paralelo creado', 'OK');
-  }
-  save();
-  closeParallelModal();
-  renderParallels();
-  updateParallelSelects();
-}
-
-function deleteParallel(id) {
-  if (!confirm('¿Eliminar este paralelo? Los estudiantes asociados quedarán sin paralelo.')) return;
-  state.parallels = state.parallels.filter(function(p) { return p.id !== id; });
-  state.students.forEach(function(s) { if (s.parallelId === id) s.parallelId = ''; });
-  save();
-  renderParallels();
-  updateParallelSelects();
-  toast('Paralelo eliminado', 'X');
-}
-
-function renderParallels() {
-  var grid = document.getElementById('parallelsGrid');
-  var empty = document.getElementById('parallelsEmpty');
-  if (state.parallels.length === 0) {
-    grid.innerHTML = '';
-    empty.classList.remove('hidden');
-    return;
-  }
-  empty.classList.add('hidden');
-  var html = '';
-  state.parallels.forEach(function(p) {
-    var count = state.students.filter(function(s) { return s.parallelId === p.id; }).length;
-    html += '<div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition">';
-    html += '<div class="flex items-start justify-between mb-3">';
-    html += '<div class="w-12 h-12 bg-gradient-to-br from-indigo-100 to-purple-100 rounded-xl flex items-center justify-center text-2xl"></div>';
-    html += '<div class="flex gap-1">';
-    html += '<button onclick="openParallelModal(\'' + p.id + '\')" class="p-2 hover:bg-slate-100 rounded-lg text-slate-500">✏️</button>';
-    html += '<button onclick="deleteParallel(\'' + p.id + '\')" class="p-2 hover:bg-rose-50 rounded-lg text-rose-500">🗑️</button>';
-    html += '</div></div>';
-    html += '<h3 class="font-bold text-slate-800 text-lg">' + p.name + '</h3>';
-    html += '<p class="text-sm text-slate-500 mt-1">' + (p.desc || 'Sin descripción') + '</p>';
-    html += '<div class="mt-4 pt-4 border-t border-slate-100 flex items-center justify-between">';
-    html += '<span class="text-xs text-slate-500">Estudiantes</span>';
-    html += '<span class="text-sm font-bold text-indigo-600">' + count + '</span>';
-    html += '</div></div>';
-  });
-  grid.innerHTML = html;
-}
-
-// ===== ESTUDIANTES =====
-function openStudentModal(id) {
-  state.editingStudentId = id || null;
-  document.getElementById('studentModalTitle').textContent = id ? 'Editar Estudiante' : 'Nuevo Estudiante';
-  updateParallelSelects();
-  if (id) {
-    var s = state.students.find(function(x) { return x.id === id; });
-    document.getElementById('studentName').value = s.name;
-    document.getElementById('studentId').value = s.studentId || '';
-    document.getElementById('studentParallel').value = s.parallelId;
-  } else {
-    document.getElementById('studentName').value = '';
-    document.getElementById('studentId').value = '';
-    document.getElementById('studentParallel').value = '';
-  }
-  document.getElementById('studentModal').classList.remove('hidden');
-  document.getElementById('studentModal').classList.add('flex');
-}
-
-function closeStudentModal() {
-  document.getElementById('studentModal').classList.add('hidden');
-  document.getElementById('studentModal').classList.remove('flex');
-}
-
-function saveStudent() {
-  var name = document.getElementById('studentName').value.trim();
-  var studentId = document.getElementById('studentId').value.trim();
-  var parallelId = document.getElementById('studentParallel').value;
-  if (!name) return toast('El nombre es obligatorio', '!');
-  if (!parallelId) return toast('Selecciona un paralelo', '!');
-  if (state.editingStudentId) {
-    var s = state.students.find(function(x) { return x.id === state.editingStudentId; });
-    s.name = name; s.studentId = studentId; s.parallelId = parallelId;
-    toast('Estudiante actualizado', 'OK');
-  } else {
-    state.students.push({ id: Date.now().toString(), name: name, studentId: studentId, parallelId: parallelId });
-    toast('Estudiante agregado', 'OK');
-  }
-  save();
-  closeStudentModal();
-  renderStudents();
-}
-
-function deleteStudent(id) {
-  if (!confirm('¿Eliminar este estudiante?')) return;
-  state.students = state.students.filter(function(s) { return s.id !== id; });
-  save();
-  renderStudents();
-  toast('Estudiante eliminado', 'X');
-}
-
-function renderStudents() {
-  updateParallelSelects();
-  var search = document.getElementById('searchStudent').value.toLowerCase();
-  var filter = document.getElementById('filterParallel').value;
-  var tbody = document.getElementById('studentsTable');
-  var empty = document.getElementById('studentsEmpty');
-  
-  var list = state.students.filter(function(s) {
-    var matchSearch = s.name.toLowerCase().includes(search) || (s.studentId || '').toLowerCase().includes(search);
-    var matchFilter = !filter || s.parallelId === filter;
-    return matchSearch && matchFilter;
-  });
-
-  if (state.students.length === 0) {
-    tbody.innerHTML = '';
-    empty.classList.remove('hidden');
-    return;
-  }
-  empty.classList.add('hidden');
-
-  if (list.length === 0) {
-    tbody.innerHTML = '<tr><td colspan="4" class="p-8 text-center text-slate-400">No se encontraron resultados</td></tr>';
-    return;
-  }
-
-  var html = '';
-  list.forEach(function(s) {
-    var p = state.parallels.find(function(x) { return x.id === s.parallelId; });
-    html += '<tr class="hover:bg-slate-50 transition">';
-    html += '<td class="px-6 py-4"><div class="flex items-center gap-3">';
-    html += '<div class="w-9 h-9 bg-gradient-to-br from-indigo-400 to-purple-500 rounded-full flex items-center justify-center text-white font-bold text-sm">' + s.name.charAt(0).toUpperCase() + '</div>';
-    html += '<span class="font-medium text-slate-800">' + s.name + '</span>';
-    html += '</div></td>';
-    html += '<td class="px-6 py-4"><span class="px-3 py-1 bg-indigo-50 text-indigo-700 text-xs font-medium rounded-full">' + (p ? p.name : 'Sin paralelo') + '</span></td>';
-    html += '<td class="px-6 py-4 text-sm text-slate-600">' + (s.studentId || '—') + '</td>';
-    html += '<td class="px-6 py-4 text-center">';
-    html += '<button onclick="openStudentModal(\'' + s.id + '\')" class="p-2 hover:bg-indigo-50 rounded-lg text-indigo-600">✏️</button>';
-    html += '<button onclick="deleteStudent(\'' + s.id + '\')" class="p-2 hover:bg-rose-50 rounded-lg text-rose-600">🗑️</button>';
-    html += '</td></tr>';
-  });
-  tbody.innerHTML = html;
-}
-
-// ===== IMPORTAR ESTUDIANTES =====
-function openImportModal() {
-  state.importPreview = [];
-  importedFileContent = null;
-  document.getElementById('pasteArea').value = '';
-  document.getElementById('previewSection').classList.add('hidden');
-  document.getElementById('confirmImportBtn').disabled = true;
-  document.getElementById('fileInfo').classList.add('hidden');
-  document.getElementById('fileName').textContent = '';
-  document.getElementById('fileSize').textContent = '';
-  clearFile();
-  switchImportTab('paste');
-  updateParallelSelects();
-  document.getElementById('importModal').classList.remove('hidden');
-  document.getElementById('importModal').classList.add('flex');
-}
-
-function closeImportModal() {
-  document.getElementById('importModal').classList.add('hidden');
-  document.getElementById('importModal').classList.remove('flex');
-}
-
-function switchImportTab(tab) {
-  var pasteTab = document.getElementById('pasteTab');
-  var fileTab = document.getElementById('fileTab');
-  var tabPaste = document.getElementById('tabPaste');
-  var tabFile = document.getElementById('tabFile');
-  
-  if (tab === 'paste') {
-    pasteTab.classList.remove('hidden');
-    fileTab.classList.add('hidden');
-    tabPaste.classList.add('border-indigo-500', 'text-indigo-600');
-    tabPaste.classList.remove('border-transparent', 'text-slate-500');
-    tabFile.classList.remove('border-indigo-500', 'text-indigo-600');
-    tabFile.classList.add('border-transparent', 'text-slate-500');
-  } else {
-    pasteTab.classList.add('hidden');
-    fileTab.classList.remove('hidden');
-    tabFile.classList.add('border-indigo-500', 'text-indigo-600');
-    tabFile.classList.remove('border-transparent', 'text-slate-500');
-    tabPaste.classList.remove('border-indigo-500', 'text-indigo-600');
-    tabPaste.classList.add('border-transparent', 'text-slate-500');
-  }
-}
-
-function handleFileSelect(event) {
-  var file = event.target.files[0];
-  if (!file) return;
-  var reader = new FileReader();
-  reader.onload = function(e) {
-    importedFileContent = e.target.result;
-    document.getElementById('fileName').textContent = file.name;
-    document.getElementById('fileSize').textContent = (file.size / 1024).toFixed(2) + ' KB';
-    document.getElementById('fileInfo').classList.remove('hidden');
-  };
-  reader.readAsText(file);
-}
-
-function clearFile() {
-  importedFileContent = null;
-  document.getElementById('fileInput').value = '';
-  document.getElementById('fileInfo').classList.add('hidden');
-}
-
-document.addEventListener('DOMContentLoaded', function() {
-  var dropZone = document.getElementById('dropZone');
-  if (dropZone) {
-    dropZone.addEventListener('dragover', function(e) {
-      e.preventDefault();
-      dropZone.classList.add('dragover');
-    });
-    dropZone.addEventListener('dragleave', function() { dropZone.classList.remove('dragover'); });
-    dropZone.addEventListener('drop', function(e) {
-      e.preventDefault();
-      dropZone.classList.remove('dragover');
-      var file = e.dataTransfer.files[0];
-      if (file) {
-        var dt = new DataTransfer();
-        dt.items.add(file);
-        document.getElementById('fileInput').files = dt.files;
-        handleFileSelect({ target: { files: [file] } });
-      }
-    });
-  }
-  updateParallelSelects();
-  updateDashboard();
-  document.getElementById('attendanceDate').value = todayStr();
-});
-
-function parseCSVContent(content, separator) {
-  var lines = content.split(/\r?\n/).filter(function(l) { return l.trim(); });
-  if (lines.length === 0) return [];
-  
-  var sep = separator;
-  if (sep === 'auto') {
-    var firstLine = lines[0];
-    if (firstLine.includes(';')) sep = ';';
-    else if (firstLine.includes(',')) sep = ',';
-    else if (firstLine.includes('\t')) sep = '\t';
-    else sep = ',';
-  } else if (sep === 'tab') {
-    sep = '\t';
-  }
-  
-  return lines.map(function(line) {
-    var cells = [];
-    var current = '';
-    var inQuotes = false;
-    for (var i = 0; i < line.length; i++) {
-      var char = line[i];
-      if (char === '"') {
-        inQuotes = !inQuotes;
-      } else if (char === sep && !inQuotes) {
-        cells.push(current);
-        current = '';
+  // Envío del formulario
+  const form = document.getElementById('formReserva');
+  const mensaje = document.getElementById('mensajeExito');
+  form.addEventListener('submit', e => {
+    e.preventDefault();
+    // Validación básica
+    const requeridos = form.querySelectorAll('[required]');
+    let valido = true;
+    requeridos.forEach(campo => {
+      if (!campo.value.trim()) {
+        campo.style.borderColor = '#e74c3c';
+        valido = false;
       } else {
-        current += char;
+        campo.style.borderColor = '';
       }
+    });
+    const productos = form.querySelectorAll('input[name="productos"]:checked');
+    if (productos.length === 0) {
+      valido = false;
+      alert('Por favor seleccioná al menos un producto a alquilar.');
     }
-    cells.push(current);
-    return cells.map(function(c) { return c.replace(/^"|"$/g, '').trim(); });
+    if (!valido) return;
+
+    // Aquí podrías enviar los datos a un backend o servicio (EmailJS, Formspree, etc.)
+    mensaje.classList.add('show');
+    form.reset();
+    setTimeout(() => mensaje.classList.remove('show'), 6000);
+    mensaje.scrollIntoView({behavior:'smooth', block:'center'});
   });
-}
 
-function analyzeImport() {
-  var skipHeader = document.getElementById('skipHeader').checked;
-  var createMissing = document.getElementById('createMissingParallels').checked;
-  var defaultParallel = document.getElementById('importDefaultParallel').value;
-  var separator = document.getElementById('importSeparator').value;
-  
-  var rows = [];
-  var activeTab = document.getElementById('pasteTab').classList.contains('hidden') ? 'file' : 'paste';
-  
-  if (activeTab === 'paste') {
-    var content = document.getElementById('pasteArea').value.trim();
-    if (!content) return toast('Pega contenido primero', '!');
-    rows = parseCSVContent(content, 'tab');
-  } else {
-    if (!importedFileContent) return toast('Sube un archivo primero', '!');
-    rows = parseCSVContent(importedFileContent, separator);
-  }
-  
-  if (rows.length === 0) return toast('No se encontraron datos', '!');
-  
-  if (skipHeader) {
-    var firstRow = rows[0];
-    var isHeader = firstRow.some(function(cell) {
-      var lower = cell.toLowerCase();
-      return lower.includes('nombre') || lower.includes('name') || lower.includes('id') || lower.includes('cedula') || lower.includes('paralelo') || lower.includes('class');
-    });
-    if (isHeader) rows = rows.slice(1);
-  }
-  
-  var preview = [];
-  rows.forEach(function(row, idx) {
-    var name = '', studentId = '', parallelName = '';
-    
-    if (row.length >= 3) {
-      name = row[0];
-      studentId = row[1];
-      parallelName = row[2];
-    } else if (row.length === 2) {
-      var secondIsNumber = /^\d+$/.test(row[1].replace(/\s/g, ''));
-      if (secondIsNumber) {
-        name = row[0];
-        studentId = row[1];
-      } else {
-        name = row[0];
-        parallelName = row[1];
-      }
-    } else if (row.length === 1) {
-      name = row[0];
-    }
-    
-    name = normalizeText(name);
-    studentId = normalizeText(studentId);
-    parallelName = normalizeText(parallelName);
-    
-    var parallelId = '';
-    var status = 'ok';
-    var statusMsg = 'Válido';
-    
-    if (!name) {
-      status = 'invalid';
-      statusMsg = 'Sin nombre';
-    } else {
-      if (parallelName) {
-        var found = findParallelByName(parallelName);
-        if (found) {
-          parallelId = found.id;
-        } else if (createMissing) {
-          var newP = { id: Date.now().toString() + '_' + idx, name: parallelName, desc: 'Creado automáticamente' };
-          state.parallels.push(newP);
-          parallelId = newP.id;
-          statusMsg = 'Paralelo creado';
-        } else {
-          parallelId = defaultParallel;
-          statusMsg = 'Paralelo no encontrado, usando default';
-          status = 'warning';
-        }
-      } else {
-        parallelId = defaultParallel;
-        if (!defaultParallel) {
-          status = 'warning';
-          statusMsg = 'Sin paralelo asignado';
-        }
-      }
-    }
-    
-    preview.push({
-      idx: idx + 1,
-      name: name,
-      studentId: studentId,
-      parallelName: parallelName || (parallelId ? (state.parallels.find(function(p) { return p.id === parallelId; }) || {}).name : ''),
-      parallelId: parallelId,
-      status: status,
-      statusMsg: statusMsg
-    });
-  });
-  
-  state.importPreview = preview;
-  
-  var validCount = preview.filter(function(p) { return p.status === 'ok' || p.status === 'warning'; }).length;
-  var invalidCount = preview.filter(function(p) { return p.status === 'invalid'; }).length;
-  
-  document.getElementById('previewValid').textContent = '✓ ' + validCount + ' válidos';
-  document.getElementById('previewInvalid').textContent = '✗ ' + invalidCount + ' inválidos';
-  document.getElementById('previewCount').textContent = validCount;
-  document.getElementById('previewSection').classList.remove('hidden');
-  document.getElementById('confirmImportBtn').disabled = validCount === 0;
-  
-  var tbody = document.getElementById('previewTable');
-  var html = '';
-  preview.slice(0, 50).forEach(function(p) {
-    var statusClass = p.status === 'ok' ? 'bg-emerald-100 text-emerald-700' : 
-                      p.status === 'warning' ? 'bg-amber-100 text-amber-700' : 
-                      'bg-rose-100 text-rose-700';
-    html += '<tr class="' + (p.status === 'invalid' ? 'bg-rose-50' : '') + '">';
-    html += '<td class="px-4 py-2 text-xs text-slate-500">' + p.idx + '</td>';
-    html += '<td class="px-4 py-2 font-medium text-slate-800">' + (p.name || '<em class="text-slate-400">vacío</em>') + '</td>';
-    html += '<td class="px-4 py-2 text-slate-600">' + (p.studentId || '—') + '</td>';
-    html += '<td class="px-4 py-2 text-slate-600">' + (p.parallelName || '<em class="text-slate-400">sin asignar</em>') + '</td>';
-    html += '<td class="px-4 py-2 text-center"><span class="px-2 py-1 rounded-full text-xs font-medium ' + statusClass + '">' + p.statusMsg + '</span></td>';
-    html += '</tr>';
-  });
-  if (preview.length > 50) {
-    html += '<tr><td colspan="5" class="px-4 py-2 text-center text-xs text-slate-500">... y ' + (preview.length - 50) + ' registros más</td></tr>';
-  }
-  tbody.innerHTML = html;
-  
-  toast('Analizados ' + preview.length + ' registros', 'i');
-}
-
-function confirmImport() {
-  var valid = state.importPreview.filter(function(p) { return p.status !== 'invalid'; });
-  if (valid.length === 0) return toast('No hay registros válidos', '!');
-  
-  if (!confirm('¿Importar ' + valid.length + ' estudiantes?')) return;
-  
-  var added = 0;
-  valid.forEach(function(p) {
-    var exists = state.students.find(function(s) { 
-      return s.name.toLowerCase() === p.name.toLowerCase() && s.parallelId === p.parallelId;
-    });
-    if (exists) return;
-    
-    state.students.push({
-      id: Date.now().toString() + '_' + Math.random().toString(36).substr(2, 5),
-      name: p.name,
-      studentId: p.studentId,
-      parallelId: p.parallelId
-    });
-    added++;
-  });
-  
-  save();
-  closeImportModal();
-  renderStudents();
-  updateParallelSelects();
-  toast(added + ' estudiantes importados correctamente', 'OK');
-}
-
-// ===== ASISTENCIA =====
-function initAttendance() {
-  updateParallelSelects();
-  var dateInput = document.getElementById('attendanceDate');
-  if (!dateInput.value) dateInput.value = todayStr();
-  loadAttendanceList();
-}
-
-function loadAttendanceList() {
-  var parallelId = document.getElementById('attendanceParallel').value;
-  var date = document.getElementById('attendanceDate').value;
-  var list = document.getElementById('attendanceList');
-  var summary = document.getElementById('attendanceSummary');
-
-  if (!parallelId) {
-    list.innerHTML = '<p class="p-8 text-center text-slate-400">Selecciona un paralelo para ver los estudiantes</p>';
-    summary.textContent = '';
-    return;
-  }
-
-  var students = state.students.filter(function(s) { return s.parallelId === parallelId; });
-  if (students.length === 0) {
-    list.innerHTML = '<p class="p-8 text-center text-slate-400">No hay estudiantes en este paralelo</p>';
-    summary.textContent = '';
-    return;
-  }
-
-  var existing = state.attendance.find(function(a) { return a.date === date && a.parallelId === parallelId; });
-  state.currentAttendance = existing ? Object.assign({}, existing.records) : {};
-
-  var html = '';
-  students.forEach(function(s, i) {
-    var current = state.currentAttendance[s.id] || '';
-    html += '<div class="p-4 flex flex-col md:flex-row md:items-center gap-3 hover:bg-slate-50 transition">';
-    html += '<div class="flex items-center gap-3 flex-1">';
-    html += '<span class="w-8 h-8 bg-slate-100 rounded-full flex items-center justify-center text-sm font-bold text-slate-600">' + (i + 1) + '</span>';
-    html += '<div><p class="font-medium text-slate-800">' + s.name + '</p>';
-    html += '<p class="text-xs text-slate-500">' + (s.studentId || 'Sin ID') + '</p></div>';
-    html += '</div>';
-    html += '<div class="flex gap-2 flex-wrap">';
-    html += '<button type="button" onclick="setStatus(\'' + s.id + '\', \'P\')" class="status-btn px-3 py-1.5 rounded-lg text-xs font-medium border-2 ' + (current === 'P' ? 'bg-emerald-500 text-white border-emerald-500 selected' : 'bg-white text-emerald-700 border-emerald-200 hover:bg-emerald-50') + '">P</button>';
-    html += '<button type="button" onclick="setStatus(\'' + s.id + '\', \'A\')" class="status-btn px-3 py-1.5 rounded-lg text-xs font-medium border-2 ' + (current === 'A' ? 'bg-amber-500 text-white border-amber-500 selected' : 'bg-white text-amber-700 border-amber-200 hover:bg-amber-50') + '">A</button>';
-    html += '<button type="button" onclick="setStatus(\'' + s.id + '\', \'FI\')" class="status-btn px-3 py-1.5 rounded-lg text-xs font-medium border-2 ' + (current === 'FI' ? 'bg-rose-500 text-white border-rose-500 selected' : 'bg-white text-rose-700 border-rose-200 hover:bg-rose-50') + '">FI</button>';
-    html += '<button type="button" onclick="setStatus(\'' + s.id + '\', \'FJ\')" class="status-btn px-3 py-1.5 rounded-lg text-xs font-medium border-2 ' + (current === 'FJ' ? 'bg-blue-500 text-white border-blue-500 selected' : 'bg-white text-blue-700 border-blue-200 hover:bg-blue-50') + '">FJ</button>';
-    html += '</div></div>';
-  });
-  list.innerHTML = html;
-
-  updateAttendanceSummary();
-}
-
-function setStatus(studentId, status) {
-  console.log('setStatus called:', studentId, status);
-  if (state.currentAttendance[studentId] === status) {
-    delete state.currentAttendance[studentId];
-  } else {
-    state.currentAttendance[studentId] = status;
-  }
-  loadAttendanceList();
-}
-
-function markAllPresent() {
-  var parallelId = document.getElementById('attendanceParallel').value;
-  if (!parallelId) return;
-  var students = state.students.filter(function(s) { return s.parallelId === parallelId; });
-  students.forEach(function(s) { state.currentAttendance[s.id] = 'P'; });
-  loadAttendanceList();
-  toast('Todos marcados como presentes', 'OK');
-}
-
-function clearAttendance() {
-  state.currentAttendance = {};
-  loadAttendanceList();
-}
-
-function updateAttendanceSummary() {
-  var summary = document.getElementById('attendanceSummary');
-  var values = Object.values(state.currentAttendance);
-  var p = values.filter(function(v) { return v === 'P'; }).length;
-  var a = values.filter(function(v) { return v === 'A'; }).length;
-  var fi = values.filter(function(v) { return v === 'FI'; }).length;
-  var fj = values.filter(function(v) { return v === 'FJ'; }).length;
-  var parallelId = document.getElementById('attendanceParallel').value;
-  var total = state.students.filter(function(s) { return s.parallelId === parallelId; }).length;
-  var pending = total - values.length;
-  summary.innerHTML = '<span class="font-medium">Total: ' + total + '</span> · ' +
-    '<span class="text-emerald-600">P: ' + p + '</span> · ' +
-    '<span class="text-amber-600">A: ' + a + '</span> · ' +
-    '<span class="text-rose-600">FI: ' + fi + '</span> · ' +
-    '<span class="text-blue-600">FJ: ' + fj + '</span> · ' +
-    '<span class="text-slate-400">Sin marcar: ' + pending + '</span>';
-}
-
-function saveAttendance() {
-  var parallelId = document.getElementById('attendanceParallel').value;
-  var date = document.getElementById('attendanceDate').value;
-  if (!parallelId) return toast('Selecciona un paralelo', '!');
-  if (!date) return toast('Selecciona una fecha', '!');
-  if (Object.keys(state.currentAttendance).length === 0) return toast('Marca al menos un estudiante', '!');
-
-  var idx = state.attendance.findIndex(function(a) { return a.date === date && a.parallelId === parallelId; });
-  var record = {
-    id: Date.now().toString(),
-    date: date,
-    parallelId: parallelId,
-    records: Object.assign({}, state.currentAttendance),
-    createdAt: new Date().toISOString()
-  };
-  if (idx >= 0) {
-    state.attendance[idx] = record;
-    toast('Asistencia actualizada', 'OK');
-  } else {
-    state.attendance.push(record);
-    toast('Asistencia guardada', 'OK');
-  }
-  save();
-}
-
-// ===== REPORTES =====
-function initReports() {
-  updateParallelSelects();
-  var today = todayStr();
-  var monthAgo = new Date();
-  monthAgo.setMonth(monthAgo.getMonth() - 1);
-  document.getElementById('reportTo').value = today;
-  document.getElementById('reportFrom').value = monthAgo.toISOString().split('T')[0];
-}
-
-function generateReport() {
-  var from = document.getElementById('reportFrom').value;
-  var to = document.getElementById('reportTo').value;
-  var parallel = document.getElementById('reportParallel').value;
-  var tbody = document.getElementById('reportTable');
-
-  var students = state.students;
-  if (parallel) students = students.filter(function(s) { return s.parallelId === parallel; });
-
-  if (students.length === 0) {
-    tbody.innerHTML = '<tr><td colspan="7" class="p-8 text-center text-slate-400">No hay estudiantes</td></tr>';
-    return;
-  }
-
-  var rows = students.map(function(s) {
-    var p = state.parallels.find(function(x) { return x.id === s.parallelId; });
-    var P = 0, A = 0, FI = 0, FJ = 0, total = 0;
-    state.attendance.forEach(function(rec) {
-      if (from && rec.date < from) return;
-      if (to && rec.date > to) return;
-      if (rec.records[s.id]) {
-        total++;
-        if (rec.records[s.id] === 'P') P++;
-        else if (rec.records[s.id] === 'A') A++;
-        else if (rec.records[s.id] === 'FI') FI++;
-        else if (rec.records[s.id] === 'FJ') FJ++;
+  // Animación suave al hacer scroll
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.style.opacity = '1';
+        entry.target.style.transform = 'translateY(0)';
       }
     });
-    var percent = total > 0 ? Math.round((P / total) * 100) : 0;
-    return { s: s, p: p, P: P, A: A, FI: FI, FJ: FJ, total: total, percent: percent };
+  }, {threshold: 0.1});
+  document.querySelectorAll('.card, .feature, .galeria-item').forEach(el => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(30px)';
+    el.style.transition = 'opacity .6s ease, transform .6s ease';
+    observer.observe(el);
   });
-
-  var html = '';
-  rows.forEach(function(r) {
-    var barColor = r.percent >= 80 ? 'bg-emerald-500' : r.percent >= 60 ? 'bg-amber-500' : 'bg-rose-500';
-    html += '<tr class="hover:bg-slate-50 transition">';
-    html += '<td class="px-6 py-4"><div class="flex items-center gap-3">';
-    html += '<div class="w-9 h-9 bg-gradient-to-br from-indigo-400 to-purple-500 rounded-full flex items-center justify-center text-white font-bold text-sm">' + r.s.name.charAt(0).toUpperCase() + '</div>';
-    html += '<span class="font-medium text-slate-800">' + r.s.name + '</span></div></td>';
-    html += '<td class="px-6 py-4"><span class="px-3 py-1 bg-indigo-50 text-indigo-700 text-xs font-medium rounded-full">' + (r.p ? r.p.name : '—') + '</span></td>';
-    html += '<td class="px-4 py-4 text-center font-bold text-emerald-600">' + r.P + '</td>';
-    html += '<td class="px-4 py-4 text-center font-bold text-amber-600">' + r.A + '</td>';
-    html += '<td class="px-4 py-4 text-center font-bold text-rose-600">' + r.FI + '</td>';
-    html += '<td class="px-4 py-4 text-center font-bold text-blue-600">' + r.FJ + '</td>';
-    html += '<td class="px-4 py-4 text-center"><div class="flex items-center gap-2 justify-center">';
-    html += '<div class="w-16 h-2 bg-slate-100 rounded-full overflow-hidden"><div class="h-full ' + barColor + '" style="width: ' + r.percent + '%"></div></div>';
-    html += '<span class="text-sm font-bold text-slate-700">' + r.percent + '%</span>';
-    html += '</div></td></tr>';
-  });
-  tbody.innerHTML = html;
-}
-
-function exportCSV() {
-  var from = document.getElementById('reportFrom').value;
-  var to = document.getElementById('reportTo').value;
-  var parallel = document.getElementById('reportParallel').value;
-  var students = state.students;
-  if (parallel) students = students.filter(function(s) { return s.parallelId === parallel; });
-
-  var csv = 'Nombre,ID,Paralelo,Presentes,Atrasos,Falta Injustificada,Falta Justificada,% Asistencia\n';
-  students.forEach(function(s) {
-    var p = state.parallels.find(function(x) { return x.id === s.parallelId; });
-    var P = 0, A = 0, FI = 0, FJ = 0, total = 0;
-    state.attendance.forEach(function(rec) {
-      if (from && rec.date < from) return;
-      if (to && rec.date > to) return;
-      if (rec.records[s.id]) {
-        total++;
-        if (rec.records[s.id] === 'P') P++;
-        else if (rec.records[s.id] === 'A') A++;
-        else if (rec.records[s.id] === 'FI') FI++;
-        else if (rec.records[s.id] === 'FJ') FJ++;
-      }
-    });
-    var percent = total > 0 ? Math.round((P / total) * 100) : 0;
-    csv += '"' + s.name + '","' + (s.studentId || '') + '","' + (p ? p.name : '') + '",' + P + ',' + A + ',' + FI + ',' + FJ + ',' + percent + '%\n';
-  });
-
-  var blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-  var link = document.createElement('a');
-  link.href = URL.createObjectURL(blob);
-  link.download = 'reporte_asistencia_' + todayStr() + '.csv';
-  link.click();
-  toast('CSV exportado', 'OK');
-}
-
-// ===== DASHBOARD =====
-function updateDashboard() {
-  document.getElementById('stat-students').textContent = state.students.length;
-  document.getElementById('stat-parallels').textContent = state.parallels.length;
-
-  var today = todayStr();
-  var todayRecords = state.attendance.filter(function(a) { return a.date === today; });
-  var presentToday = 0, absentToday = 0;
-  todayRecords.forEach(function(r) {
-    Object.values(r.records).forEach(function(v) {
-      if (v === 'P') presentToday++;
-      else absentToday++;
-    });
-  });
-  document.getElementById('stat-present').textContent = presentToday;
-  document.getElementById('stat-absent').textContent = absentToday;
-
-  var ctx = document.getElementById('todayChart');
-  if (todayChart) todayChart.destroy();
-  var totalP = 0, totalA = 0, totalFI = 0, totalFJ = 0;
-  todayRecords.forEach(function(r) {
-    Object.values(r.records).forEach(function(v) {
-      if (v === 'P') totalP++;
-      else if (v === 'A') totalA++;
-      else if (v === 'FI') totalFI++;
-      else if (v === 'FJ') totalFJ++;
-    });
-  });
-
-  if (totalP + totalA + totalFI + totalFJ === 0) {
-    ctx.parentElement.innerHTML = '<h3 class="font-bold text-slate-800 mb-4">Asistencia de hoy</h3><p class="text-center text-slate-400 py-12">No hay registros para hoy</p>';
-  } else {
-    ctx.parentElement.innerHTML = '<h3 class="font-bold text-slate-800 mb-4">Asistencia de hoy</h3><canvas id="todayChart" height="200"></canvas>';
-    var newCtx = document.getElementById('todayChart').getContext('2d');
-    todayChart = new Chart(newCtx, {
-      type: 'doughnut',
-      data: {
-        labels: ['Presentes', 'Atrasos', 'F. Injustificadas', 'F. Justificadas'],
-        datasets: [{
-          data: [totalP, totalA, totalFI, totalFJ],
-          backgroundColor: ['#10b981', '#f59e0b', '#f43f5e', '#3b82f6'],
-          borderWidth: 0
-        }]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: { legend: { position: 'bottom', labels: { padding: 15, font: { size: 11 } } } }
-      }
-    });
-  }
-
-  var recent = document.getElementById('recentRecords');
-  var sorted = state.attendance.slice().sort(function(a, b) { return new Date(b.createdAt) - new Date(a.createdAt); }).slice(0, 5);
-  if (sorted.length === 0) {
-    recent.innerHTML = '<p class="text-sm text-slate-400 text-center py-8">No hay registros aún</p>';
-  } else {
-    var html = '';
-    sorted.forEach(function(r) {
-      var p = state.parallels.find(function(x) { return x.id === r.parallelId; });
-      var count = Object.keys(r.records).length;
-      html += '<div class="flex items-center justify-between p-3 bg-slate-50 rounded-xl">';
-      html += '<div><p class="text-sm font-medium text-slate-800">' + (p ? p.name : 'Paralelo') + '</p>';
-      html += '<p class="text-xs text-slate-500">' + formatDate(r.date) + ' · ' + count + ' estudiantes</p></div>';
-      html += '<span class="text-xs px-2 py-1 bg-indigo-100 text-indigo-700 rounded-full font-medium">Registrado</span>';
-      html += '</div>';
-    });
-    recent.innerHTML = html;
-  }
-}
-
-// ===== SELECTS =====
-function updateParallelSelects() {
-  var selects = ['filterParallel', 'studentParallel', 'attendanceParallel', 'reportParallel', 'importDefaultParallel'];
-  selects.forEach(function(id) {
-    var sel = document.getElementById(id);
-    if (!sel) return;
-    var current = sel.value;
-    var isFilter = id !== 'studentParallel' && id !== 'importDefaultParallel';
-    sel.innerHTML = isFilter ? '<option value="">Todos los paralelos</option>' : '<option value="">-- Seleccionar --</option>';
-    state.parallels.forEach(function(p) {
-      var opt = document.createElement('option');
-      opt.value = p.id;
-      opt.textContent = p.name;
-      sel.appendChild(opt);
-    });
-    sel.value = current;
-  });
-}
 </script>
-
 </body>
 </html>
